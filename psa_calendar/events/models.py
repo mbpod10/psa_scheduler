@@ -79,8 +79,7 @@ class Event(models.Model):
             else:
                 print(self.end_time, self.start_time)
                 time1 = datetime.strptime(str(self.end_time), '%H:%M:%S')
-                time2 = datetime.strptime(
-                    str(self.start_time), '%H:%M:%S')
+                time2 = datetime.strptime(str(self.start_time), '%H:%M:%S')
                 difference = time1-time2
                 print(difference)
                 # self.time = difference
@@ -95,18 +94,15 @@ class Event(models.Model):
                     self.trainer.minutes_clocked = total + self.trainer.minutes_clocked
                     money = ((total / 60) * 10) + self.trainer.wages
                     self.trainer.wages = money
+                    self.trainer.save()
                 else:
                     self.trainer.minutes_clocked = total
                     money = ((total / 60) * 10)
                     self.trainer.wages = money
-
-                self.trainer.save()
+                    self.trainer.save()
 
     def __str__(self):
         if self.end_time:
-            # time = int(str(self.end_time)) - int(str(self.start_time))
             return str(self.client.last_name) + " " + str(self.day) + " (" + str(self.start_time) + ") " + str(self.trainer.last_name) + " CLOSED "
         else:
             return str(self.client.last_name) + " " + str(self.day) + " (" + str(self.start_time) + ") " + str(self.trainer.last_name) + " OPEN"
-    # def __str__(self):
-    #     return str(self.day)

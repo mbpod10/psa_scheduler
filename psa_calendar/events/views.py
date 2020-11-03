@@ -17,10 +17,10 @@ def event_list(request):
         return JsonResponse(serializer.data, safe=False)
 
 
-@api_view(http_method_names=['POST'])
+@api_view(http_method_names=['POST', 'PUT'])
 @csrf_exempt
 def event_post(request):
-    if request.method == 'POST':
+    if request.method == 'POST' or request.method == 'PUT':
         json = JSONParser().parse(request)
         serializer = EventPostSerializer(data=json)
         if serializer.is_valid():
