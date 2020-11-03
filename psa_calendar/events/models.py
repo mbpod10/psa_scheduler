@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from datetime import timedelta, datetime
 import logging
+from django.contrib.auth.models import User
 
 # Create your models here.
 
