@@ -10,16 +10,20 @@ import logging
 
 
 class Client(models.Model):
-    first_name = models.CharField(max_length=256)
-    last_name = models.CharField(max_length=256)
+    # first_name = models.CharField(max_length=256)
+    # last_name = models.CharField(max_length=256)
+    client_name = models.CharField(max_length=256)
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        # return self.first_name + " " + self.last_name
+        return self.client_name
 
 
 class Trainer(models.Model):
-    first_name = models.CharField(max_length=256)
-    last_name = models.CharField(max_length=256)
+    # first_name = models.CharField(max_length=256)
+    # last_name = models.CharField(max_length=256)
+    trainer_name = models.CharField(max_length=256)
+
     minutes_clocked = models.PositiveIntegerField(blank=True, null=True)
     wages = models.FloatField(default=0.00)
 
@@ -31,7 +35,8 @@ class Trainer(models.Model):
             self.save()
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        # return self.first_name + " " + self.last_name
+        return self.trainer_name
 
 
 class Event(models.Model):
@@ -42,9 +47,10 @@ class Event(models.Model):
     day = models.DateField(u'Day Of The Event', help_text=u'Day Of The Event')
     start_time = models.TimeField(u'Starting Time', help_text=u'Starting Time')
     end_time = models.TimeField(
-        u'Final Time', help_text='Final Time', null=True, blank=True)
+        u'Final Time', help_text='Final Time', blank=True, null=True)
     notes = models.TextField(
         u'Textual Notes', help_text='Textual Notes', blank=True, null=True)
+
     # time = models.CharField(max_length=256, null=True, blank=True)
     time = models.PositiveIntegerField(blank=True, null=True)
 
@@ -103,6 +109,6 @@ class Event(models.Model):
 
     def __str__(self):
         if self.end_time:
-            return str(self.client.last_name) + " " + str(self.day) + " (" + str(self.start_time) + ") " + str(self.trainer.last_name) + " CLOSED "
+            return str(self.client.client_name).split(" ")[1] + " " + str(self.day) + " (" + str(self.start_time) + ") " + str(self.trainer.trainer_name).split(" ")[1] + " CLOSED "
         else:
-            return str(self.client.last_name) + " " + str(self.day) + " (" + str(self.start_time) + ") " + str(self.trainer.last_name) + " OPEN"
+            return str(self.client.client_name).split(" ")[1] + " " + str(self.day) + " (" + str(self.start_time) + ") " + str(self.trainer.trainer_name).split(" ")[1] + " OPEN"
