@@ -85,11 +85,11 @@ class EventPostSerializer(serializers.ModelSerializer):
             'start_time', instance.start_time)
         instance.end_time = validated_data.get('end_time', instance.end_time)
 
-        if instance.start_time and instance.end_time:
-            print(validated_data['start_time'], instance.start_time)
-            print("not doing anyting")
-            print(self.global_start_time)
-            return instance
+        # if instance.start_time and instance.end_time:
+        #     print(validated_data['start_time'], instance.start_time)
+        #     print("not doing anyting")
+        #     print(self.global_start_time)
+        #     return instance
 
         if instance.end_time:
             print(instance.end_time)
@@ -123,5 +123,5 @@ class EventPostSerializer(serializers.ModelSerializer):
                 print(instance.trainer.wages)
                 instance.trainer.save()
                 instance.save()
-        print(self.global_start_time)
+        # print(self.global_start_time)
         return instance

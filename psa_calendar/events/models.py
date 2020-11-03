@@ -10,20 +10,14 @@ import logging
 
 
 class Client(models.Model):
-    # first_name = models.CharField(max_length=256)
-    # last_name = models.CharField(max_length=256)
     client_name = models.CharField(max_length=256)
 
     def __str__(self):
-        # return self.first_name + " " + self.last_name
         return self.client_name
 
 
 class Trainer(models.Model):
-    # first_name = models.CharField(max_length=256)
-    # last_name = models.CharField(max_length=256)
     trainer_name = models.CharField(max_length=256)
-
     minutes_clocked = models.PositiveIntegerField(blank=True, null=True)
     wages = models.FloatField(default=0.00)
 
@@ -35,7 +29,6 @@ class Trainer(models.Model):
             self.save()
 
     def __str__(self):
-        # return self.first_name + " " + self.last_name
         return self.trainer_name
 
 
@@ -50,15 +43,11 @@ class Event(models.Model):
         u'Final Time', help_text='Final Time', blank=True, null=True)
     notes = models.TextField(
         u'Textual Notes', help_text='Textual Notes', blank=True, null=True)
-
-    # time = models.CharField(max_length=256, null=True, blank=True)
     time = models.PositiveIntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name = u'Scheduling'
         verbose_name_plural = u'Scheduling'
-
-        # unique_together = ('trainer', 'client')
 
     def check_overlap(self, fixed_start, fixed_end, new_start, new_end):
         print(type(new_start), type(new_end),
@@ -83,18 +72,13 @@ class Event(models.Model):
             if self.time:
                 pass
             else:
-                print(self.end_time, self.start_time)
                 time1 = datetime.strptime(str(self.end_time), '%H:%M:%S')
                 time2 = datetime.strptime(str(self.start_time), '%H:%M:%S')
                 difference = time1-time2
-                print(difference)
-                # self.time = difference
                 total = 0
-                print(str(difference).split(":"))
                 acc = str(difference).split(":")
                 total = total + int(acc[0]) * 60
                 total = total + int(acc[1])
-                print(total)
                 self.time = total
                 if self.trainer.minutes_clocked:
                     self.trainer.minutes_clocked = total + self.trainer.minutes_clocked
