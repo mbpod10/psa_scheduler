@@ -20,12 +20,12 @@ class Client(models.Model):
 class Trainer(models.Model):
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
-    hours_clocked = models.PositiveIntegerField(blank=True, null=True)
-    wages = models.FloatField(blank=True, null=True)
+    minutes_clocked = models.PositiveIntegerField(blank=True, null=True)
+    wages = models.FloatField(default=0.00)
 
     def clean(self):
-        if self.hours_clocked:
-            money = ((self.hours_clocked / 60) * 10)
+        if self.minutes_clocked:
+            money = ((self.minutes_clocked / 60) * 10)
             print(money)
             self.wages = money
             self.save()
@@ -35,8 +35,10 @@ class Trainer(models.Model):
 
 
 class Event(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, blank=True)
-    trainer = models.ForeignKey(Trainer, null=True, on_delete=models.SET_NULL)
+    client = models.ForeignKey(
+        Client, on_delete=models.CASCADE, blank=True, null=True, related_name='client')
+    trainer = models.ForeignKey(
+        Trainer, null=True, on_delete=models.SET_NULL, related_name='trainer')
     day = models.DateField(u'Day Of The Event', help_text=u'Day Of The Event')
     start_time = models.TimeField(u'Starting Time', help_text=u'Starting Time')
     end_time = models.TimeField(
@@ -49,6 +51,8 @@ class Event(models.Model):
     class Meta:
         verbose_name = u'Scheduling'
         verbose_name_plural = u'Scheduling'
+
+        # unique_together = ('trainer', 'client')
 
     def check_overlap(self, fixed_start, fixed_end, new_start, new_end):
         print(type(new_start), type(new_end),
@@ -87,9 +91,15 @@ class Event(models.Model):
                 total = total + int(acc[1])
                 print(total)
                 self.time = total
-                self.trainer.hours_clocked = total + self.trainer.hours_clocked
-                money = ((total / 60) * 10) + self.trainer.wages
-                self.trainer.wages = money
+                if self.trainer.minutes_clocked:
+                    self.trainer.minutes_clocked = total + self.trainer.minutes_clocked
+                    money = ((total / 60) * 10) + self.trainer.wages
+                    self.trainer.wages = money
+                else:
+                    self.trainer.minutes_clocked = total
+                    money = ((total / 60) * 10)
+                    self.trainer.wages = money
+
                 self.trainer.save()
 
     def __str__(self):
@@ -98,3 +108,5 @@ class Event(models.Model):
             return str(self.client.last_name) + " " + str(self.day) + " (" + str(self.start_time) + ") " + str(self.trainer.last_name) + " CLOSED "
         else:
             return str(self.client.last_name) + " " + str(self.day) + " (" + str(self.start_time) + ") " + str(self.trainer.last_name) + " OPEN"
+    # def __str__(self):
+    #     return str(self.day)
