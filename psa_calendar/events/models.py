@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 
 
 class Client(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     client_name = models.CharField(max_length=256)
 
     def __str__(self):
@@ -18,6 +19,7 @@ class Client(models.Model):
 
 
 class Trainer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     trainer_name = models.CharField(max_length=256)
     minutes_clocked = models.PositiveIntegerField(blank=True, null=True)
     wages = models.FloatField(default=0.00)
