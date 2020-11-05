@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Workout
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -9,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'password']
         extra_kwargs = {'password': {'write_only': True, 'required': True}}
 
+    # @csrf_exempt
     def create(self, validated_data):
 
         contains_upper = False
@@ -30,7 +35,14 @@ class UserSerializer(serializers.ModelSerializer):
         if errors:
             raise serializers.ValidationError(
                 {'errors': errors}, code=400)
+            # return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.create_user(**validated_data)
         Token.objects.create(user=user)
         return user
+
+
+class WorkoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workout
+        fields = ['id', 'workout_name']
