@@ -79,23 +79,27 @@ def user_login(request):
         serializer = UserSerializer(data=data)
 
         contains_upper = False
-        errors = []
 
         for x in range(0, len(data['password'])):
             if data['password'][x].isupper():
                 contains_upper = True
 
         if len(data['password']) < 6:
-            errors.append('Password Must Be More Than 6 Characters')
+            # errors.append({"error": 'Password Must Be More Than 6 Characters'})
+            return JsonResponse({"error": "Password Must Be More Than 6 Characters"})
 
         if data['password'].isalpha():
-            errors.append('Password Must Contain Numbers')
+            # errors.append({"error": "Password Must Contain Numbers"})
+            return JsonResponse({"error": "Password Must Contain Numbers"})
 
         if not contains_upper:
-            errors.append('Password Must Contain One Capital Letter')
-        print(errors)
-        if errors:
-            return JsonResponse({"errors": errors}, status=200)
+            # errors.append(
+            # {"error": 'Password Must Contain One Capital Letter'})
+            return JsonResponse({"error": "Password Must Contain One Capital Letter"})
+
+        # print(errors)
+        # if errors:
+        #     return JsonResponse({"errors": errors}, status=200)
 
         if serializer.is_valid():
             # serializer.save()
